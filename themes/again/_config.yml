@@ -1,0 +1,24 @@
+# basic
+
+avatar: http://7xrcp8.com1.z0.glb.clouddn.com/avatar.png
+banner_small: http://7xrcp8.com1.z0.glb.clouddn.com/banner-small.png
+# banner_large: http://7xrcp8.com1.z0.glb.clouddn.com/banner-large.png
+
+disqus_shortname: dao-challenge
+
+# social
+social:
+  github: https://github.com/sjors/dao-challenge
+  twitter: https://twitter.com/provoost
+
+nav:
+  home: .
+  archive: archives
+  # about: about
+  rss: atom.xml
+
+# heox-renderre-sass
+node_sass:
+  outputStyle: nested
+  precision: 5
+  sourceComments: false
