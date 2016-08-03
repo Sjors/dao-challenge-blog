@@ -17,7 +17,9 @@
     "hexo-renderer-marked": "^0.2.10",
     "hexo-renderer-sass": "^0.2.0",
     "hexo-renderer-stylus": "^0.3.1",
-    "hexo-server": "^0.2.0"
+    "hexo-server": "^0.2.0",
+    "highlightjs": "^8.7.0",
+    "highlightjs-solidity": "^1.0.5"
   },
   "engines": {
     "node": "5.10"
