@@ -1,8 +1,7 @@
 # basic
 
-avatar: http://7xrcp8.com1.z0.glb.clouddn.com/avatar.png
-banner_small: http://7xrcp8.com1.z0.glb.clouddn.com/banner-small.png
-# banner_large: http://7xrcp8.com1.z0.glb.clouddn.com/banner-large.png
+avatar: images/avatar.png
+banner_large: images/banner-large.jpg
 
 disqus_shortname: dao-challenge
 
@@ -13,7 +12,7 @@ social:
 
 nav:
   home: .
-  archive: archives
+  # archive: archives
   # about: about
   rss: atom.xml
 
