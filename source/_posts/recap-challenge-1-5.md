@@ -17,7 +17,7 @@ The contract allows people to buy tokens for 1 finney (0.001 ETH / $0.01) each:
 		notifySellToken(tokenBalanceOf[sender], sender);
 	}
 
-Users can get their tokens refunded:
+Users can also get their tokens refunded:
 
 	function refund() noEther {
 		address sender = msg.sender;
@@ -90,7 +90,7 @@ Status: live at [0x4B90...10eF](https://etherscan.io/address/0x4B902704026D14117
 
 When the DAO was [hacked](http://uk.businessinsider.com/dao-hacked-ethereum-crashing-in-value-tens-of-millions-allegedly-stolen-2016-6), the hacker — usually called The Attacker — managed to withdraw more than they put in. I want to make this less likely by keeping user funds in segregated contracts. The hope is that if a hacker somehow completely drains his own contract, he can't also drain other people's funds.
 
-The main DaoChallenge contract creates and keeps track of DaoAccount contracts, one for each user:
+The main `DaoChallenge` contract creates and keeps track of `DaoAccount` contracts, one for each user:
 
 	mapping (address => DaoAccount) private daoAccounts;
 
