@@ -164,4 +164,4 @@ More information can be found in the [original article](https://medium.com/@dao.
 
 ## What's Next?
 
-I want to make these contracts more useful. I'd like to bring back transferring tokens between users, which is a feature I removed in Challenge 4. I also want to introduce a proposal system similar to that of the DAO, where users can vote with their tokens on how the DaoChallenge spends its funds. I'll try to introduce these features in incremental steps, offering a bounty each time for those who can rob it.
+I want to make these contracts more useful. I'd like to bring back transferring tokens between users, which is a feature I removed in Challenge 4. I also want to introduce a proposal system similar to that of the DAO, where users can vote with their tokens on how the DaoChallenge spends its funds. I'll try to introduce these features in incremental steps, offering a bounty each time for those who can rob any of those future contracts.
