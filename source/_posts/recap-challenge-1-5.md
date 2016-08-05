@@ -2,11 +2,6 @@
 title: Recap Challenge 1 - 5
 ---
 
-<!--- 
-TODO: 
-* fill in contract addresses for challenges 2 - 5
--->
-
 ## Challenge 1 - Basic Token Contract
 
 Status: live at [0xBe56...889f](https://etherscan.io/address/0xBe56093286038885733a66e554DD43a22a45889f), but not robbed yet.
@@ -21,7 +16,7 @@ The contract allows people to buy tokens for 1 finney (0.001 ETH / $0.01) each:
 		tokenBalanceOf[sender] = msg.value / tokenPrice; // rounded down
 		notifySellToken(tokenBalanceOf[sender], sender);
 	}
-	
+
 Users can get their tokens refunded:
 
 	function refund() noEther {
@@ -32,7 +27,7 @@ Users can get their tokens refunded:
 		sender.send(tokenBalance * tokenPrice);
 		notifyRefundToken(tokenBalance, sender);
 	}
-	
+
 Thus far, no one has been able to redeem more ether than they put in. You still have six weeks to try to rob the 9.5 ETH from this contract.
 
 More information can be found in the [original article](https://medium.com/@dao.challenge/challenge-1-296cb5dab68f#.jjd06x4le).
@@ -84,7 +79,7 @@ The fix was simple enough. All I had to do was add `private` to the function def
 			throw;
 		}
 	}
-  
+
 To date, this new contract has not been robbed.
 
 More information can be found in the [original article](https://medium.com/@dao.challenge/challenge-3-how-i-almost-lost-100-1a11a9824ccb#.xayw0s8n0).
@@ -135,13 +130,13 @@ Each DaoAccount then takes care of buying tokens and refunds:
 
 There's no way to make `refund()` return more than what's in this DaoAccount, and this protects other DaoAccount instances and DaoChallenge. Of course, there might be a vulnerability in DaoAccount that allows an attacker to drain every single instance, one by one.
 
-So far, that hasn't happened. 
+So far, that hasn't happened.
 
 More information can be found in the [original article](https://medium.com/@dao.challenge/challenge-4-segregate-user-funds-986001587fae#.a72ul7r1n).
 
 ## Challenge 5 - Segregated Funds Usability
 
-Status: live at [0x](https://etherscan.io/address/), but not robbed yet.
+Status: live at [0xae06...5d67](https://etherscan.io/address/0xae0680c49df146e18b2bc19635e5e402494b5d67), but not robbed yet.
 
 The contract in Challenge 4 was very tedious to use in practice. It required the user to find out which DaoAccount belonged to them and import that into their wallet before they could buy tokens from it.
 
@@ -161,8 +156,8 @@ I added wrapper functions to DaoChallenge; they automatically look up the user's
 
 		account.withdraw(tokens);
 		notifyWithdraw(msg.sender, tokens);
-	} 
-	
+	}
+
 This gives more power to the main DaoChallenge contract, which could potentially be exploited to drain all DaoAccount contracts. However, so far that has not happened.
 
 More information can be found in the [original article](https://medium.com/@dao.challenge/challenge-5-segregated-funds-usability-6e749badb24d#.gmas7271f).
