@@ -50,7 +50,7 @@ I added the following function that allows users to transfer tokens to another u
 		notifyTranferToken(tokens, sender, recipient);
 	}
 
-When I wrote this code, I expected that if there was any vulnerability, it would be in this new transfer function. But as explained in Challenge 3 below, the vulnerability was in a different function. However, if you believe there is *also* a vulnerability in this `transfer()` function, I suggest that you try to rob Challenge 3, which has the exact same `transfer()` function.
+When I wrote this code, I expected that if there was any vulnerability, it would be in the new transfer function. But as explained in Challenge 3 below, the vulnerability was in a different function. However, if you believe there's *also* a vulnerability in this `transfer()` function, I suggest you try to rob Challenge 3, which has the exact same `transfer()` function.
 
 More information can be found in the [original article](https://medium.com/@dao.challenge/challenge-2-a749c4158023#.dcxurblc1).
 
@@ -80,7 +80,7 @@ The fix was simple enough. All I had to do was add `private` to the function def
 		}
 	}
 
-To date, this new contract has not been robbed.
+To date, this new contract hasn't been robbed.
 
 More information can be found in the [original article](https://medium.com/@dao.challenge/challenge-3-how-i-almost-lost-100-1a11a9824ccb#.xayw0s8n0).
 
@@ -88,7 +88,7 @@ More information can be found in the [original article](https://medium.com/@dao.
 
 Status: live at [0x4B90...10eF](https://etherscan.io/address/0x4B902704026D14117b5E9EFA7FdaFDfF4bA610eF), but not robbed yet.
 
-When the DAO was [hacked](http://uk.businessinsider.com/dao-hacked-ethereum-crashing-in-value-tens-of-millions-allegedly-stolen-2016-6), the hacker — usually called The Attacker — managed to withdraw more than they put in. I want to make this less likely by keeping user funds in segregated contracts. The hope is that if a hacker somehow completely drains his own contract, he can't also drain other people's funds.
+When the DAO was [hacked](http://uk.businessinsider.com/dao-hacked-ethereum-crashing-in-value-tens-of-millions-allegedly-stolen-2016-6), the hacker — usually called The Attacker — managed to withdraw more than they put in. I want to make this less likely to occur by keeping user funds in segregated contracts. The hope is that if a hacker somehow completely drains their own contract, they can't also drain other people's funds.
 
 The main `DaoChallenge` contract creates and keeps track of `DaoAccount` contracts, one for each user:
 
@@ -158,10 +158,10 @@ I added wrapper functions to DaoChallenge; they automatically look up the user's
 		notifyWithdraw(msg.sender, tokens);
 	}
 
-This gives more power to the main DaoChallenge contract, which could potentially be exploited to drain all DaoAccount contracts. However, so far that has not happened.
+This gives more power to the main DaoChallenge contract, which could potentially be exploited to drain all DaoAccount contracts. However, that hasn't yet happened.
 
 More information can be found in the [original article](https://medium.com/@dao.challenge/challenge-5-segregated-funds-usability-6e749badb24d#.gmas7271f).
 
 ## What's Next?
 
-I want to make these contracts more useful. I'd like to bring back transferring tokens between users, which is a feature I removed in Challenge 4. I also want to introduce a proposal system similar to that of the DAO, where users can vote with their tokens on how the DaoChallenge spends its funds. I'll try to introduce these features in incremental steps, offering a bounty each time for those who can rob any of those future contracts.
+I want to make these contracts more useful. I'd like to bring back transferring tokens between users, which is a feature I removed in Challenge 4. I also want to introduce a proposal system similar to that of the DAO, where users can vote with their tokens on how the DaoChallenge spends its funds. I'll try to introduce these features in incremental steps, offering a bounty each time for those who can rob any of the future contracts.
