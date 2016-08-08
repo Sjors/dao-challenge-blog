@@ -88,7 +88,7 @@ More information can be found in the [original article](https://medium.com/@dao.
 
 Status: live at [0x4B90...10eF](https://etherscan.io/address/0x4B902704026D14117b5E9EFA7FdaFDfF4bA610eF), but not robbed yet.
 
-When the DAO was [hacked](http://uk.businessinsider.com/dao-hacked-ethereum-crashing-in-value-tens-of-millions-allegedly-stolen-2016-6), the hacker — usually called The Attacker — managed to withdraw more than they put in. I want to make this less likely to occur by keeping user funds in segregated contracts. The hope is that if a hacker somehow completely drains their own contract, they can't also drain other people's funds.
+When the DAO was [hacked](http://uk.businessinsider.com/dao-hacked-ethereum-crashing-in-value-tens-of-millions-allegedly-stolen-2016-6), the hacker — commonly referred to as The Attacker — managed to withdraw more than they put in. I want to make this less likely to occur by keeping user funds in segregated contracts. The hope is that if a hacker somehow completely drains their own contract, they can't also drain other people's funds.
 
 The main `DaoChallenge` contract creates and keeps track of `DaoAccount` contracts, one for each user:
 
@@ -105,7 +105,7 @@ The main `DaoChallenge` contract creates and keeps track of `DaoAccount` contrac
 		return daoAccounts[accountOwner];
 	}   
 
-Each DaoAccount then takes care of buying tokens and refunds:
+Each `DaoAccount` then takes care of buying tokens and refunds:
 
 	function () onlyOwner returns (uint256 newBalance){
 		uint256 amount = msg.value;
@@ -128,7 +128,7 @@ Each DaoAccount then takes care of buying tokens and refunds:
 		withdrawEtherOrThrow(tokenBalance * tokenPrice);
 	}
 
-There's no way to make `refund()` return more than what's in this DaoAccount, and this protects other DaoAccount instances and DaoChallenge. Of course, there might be a vulnerability in DaoAccount that allows an attacker to drain every single instance, one by one.
+There's no way to make `refund()` return more than what's in this `DaoAccount`, and this protects other `DaoAccount` instances and `DaoChallenge`. Of course, there might be a vulnerability in `DaoAccount` that allows an attacker to drain every single instance, one by one.
 
 So far, that hasn't happened.
 
@@ -138,9 +138,9 @@ More information can be found in the [original article](https://medium.com/@dao.
 
 Status: live at [0xae06...5d67](https://etherscan.io/address/0xae0680c49df146e18b2bc19635e5e402494b5d67), but not robbed yet.
 
-The contract in Challenge 4 was very tedious to use in practice. It required the user to find out which DaoAccount belonged to them and import that into their wallet before they could buy tokens from it.
+The contract in Challenge 4 was very tedious to use in practice. It required the user to find out which `DaoAccount` belonged to them and import that into their wallet before they could buy tokens from it.
 
-I added wrapper functions to DaoChallenge; they automatically look up the user's DaoAccount and call their corresponding function there:
+I added wrapper functions to `DaoChallenge`; they automatically look up the user's `DaoAccount` and call their corresponding function there:
 
     function buyTokens () returns (uint256 tokens) {
 	  DaoAccount account = accountFor(msg.sender, true);
@@ -158,10 +158,10 @@ I added wrapper functions to DaoChallenge; they automatically look up the user's
 		notifyWithdraw(msg.sender, tokens);
 	}
 
-This gives more power to the main DaoChallenge contract, which could potentially be exploited to drain all DaoAccount contracts. However, that hasn't yet happened.
+This gives more power to the main `DaoChallenge` contract, which could potentially be exploited to drain all `DaoAccount` contracts. However, that hasn't yet happened.
 
 More information can be found in the [original article](https://medium.com/@dao.challenge/challenge-5-segregated-funds-usability-6e749badb24d#.gmas7271f).
 
 ## What's Next?
 
-I want to make these contracts more useful. I'd like to bring back transferring tokens between users, which is a feature I removed in Challenge 4. I also want to introduce a proposal system similar to that of the DAO, where users can vote with their tokens on how the DaoChallenge spends its funds. I'll try to introduce these features in incremental steps, offering a bounty each time for those who can rob any of the future contracts.
+I want to make these contracts more useful. I'd like to bring back transferring tokens between users, which is a feature I removed in Challenge 4. I also want to introduce a proposal system similar to that of the DAO, where users can vote with their tokens on how the `DaoChallenge` spends its funds. I'll try to introduce these features in incremental steps, offering a bounty each time for those who can rob any of the future contracts.
