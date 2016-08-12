@@ -6,13 +6,13 @@ In [challenges 4 and 5](https://dao-challenge.herokuapp.com/2016/08/08/recap-cha
 
 Today I'm once again adding support for transferring tokens between users.
 
-For this to work, the sender and recipient both need to have a `DaoAccount`. The sender account is automatically created when the sender buys their tokens. The recipient can call `createAccount()`. This creates a `DaoAccount` instance for the recipient with 0 tokens. We could create this account automatically upon receipt of the tokens, but then the sender might accidentally send tokens and ether into space. By creating a `DaoAccount` themselves, the recipient indicates they are in control of the account.
+For this to work, the sender and recipient both need to have a `DaoAccount`. The sender account is automatically created when the sender buys tokens. Meanwhile, the recipient can call `createAccount()`, which creates a `DaoAccount` instance for the recipient without any tokens. We could create this account automatically upon receipt of the tokens, but then the sender might accidentally send tokens and ether into space. By creating a `DaoAccount` themselves, the recipient indicates they are in control of the account:
 
 	function createAccount () {
 		accountFor(msg.sender, true);
 	}  
 
-To transfer tokens and their corresponding ether, the sender needs to call `transfer()` on `DaoChallenge` with the number of tokens and the recipient's address. This function makes sure the recipient has an account and then relays the instruction to the senders `DaoAccount`:
+To transfer tokens and their corresponding ether, the sender needs to call `transfer()` on `DaoChallenge` with the number of tokens and the recipient's address. This function ensures the recipient has an account and then relays the instruction to the sender's `DaoAccount`:
 
 	function transfer(uint256 tokens, address recipient) noEther {
 		DaoAccount account = accountFor(msg.sender, false);
@@ -25,7 +25,7 @@ To transfer tokens and their corresponding ether, the sender needs to call `tran
 		notifyTransfer(msg.sender, recipient, tokens);
 	}
 	
-The senders `DaoAccount` checks that they have enough tokens and then calls `receiveTokens()` on the recipient's `DaoAccount`. It sends the correct amount of ether along with this function call:
+The sender's `DaoAccount` checks that they have enough tokens and then calls `receiveTokens()` on the recipient's `DaoAccount`. It sends the correct amount of ether along with this function call:
 
 	function transfer(uint256 tokens, DaoAccount recipient) noEther onlyDaoChallenge {
 		if (tokens == 0 || tokenBalance == 0 || tokenBalance < tokens) throw;
@@ -33,9 +33,9 @@ The senders `DaoAccount` checks that they have enough tokens and then calls `rec
 		recipient.receiveTokens.value(tokens * tokenPrice)(tokens);
 	}
 
-On the receiving end, a number of things need to be checked. Obviously, we want to make sure the amount of ether matches the number of tokens. But we also want to make sure nobody is messing with us. It's a public function and anyone can call it. An attacker could potentially trick the recipient `DaoAccount` into thinking it received tokens. I'm not exactly sure how that would happen, but better be safe than sorry.
+On the receiving end, a number of things need to be checked. Obviously, we want to make sure the amount of ether matches the number of tokens, but we also want to make sure nobody is messing with us. This is because the function is public and anyone can call it, so an attacker could potentially trick the recipient `DaoAccount` into thinking it received tokens. I'm not exactly sure how that would happen, but it's better to be safe than sorry.
 
-To determine that the sender is legit, `receiveTokens()` ensures that the sender is actually a `DaoAccount` and that this `DaoAccount` belongs to the parent `DaoChallenge`:
+To determine that the sender is legit, `receiveTokens()` ensures the sender is actually a `DaoAccount` and that this `DaoAccount` belongs to the parent `DaoChallenge`:
 
 	function receiveTokens(uint256 tokens) {
 		// Check that the sender is a DaoAccount and belongs to our DaoChallenge
@@ -52,7 +52,7 @@ To determine that the sender is legit, `receiveTokens()` ensures that the sender
 		tokenBalance += tokens;
 	}
 	
-My use of `AbstractDaoChallenge` instead of `DaoChallenge` here is a [workaround for cyclic dependencies](https://github.com/ConsenSys/truffle/issues/135#issuecomment-223996851). What's important here is that it calls `isMember()` on the parent `DaoChallenge`, which checks the sender against its `DaoAccount` list:
+My use of `AbstractDaoChallenge` instead of `DaoChallenge` here is a [workaround for cyclic dependencies](https://github.com/ConsenSys/truffle/issues/135#issuecomment-223996851). What's important is that it calls `isMember()` on the parent `DaoChallenge`, which checks the sender against its `DaoAccount` list:
 
     // Check if a given account belongs to this DaoChallenge.
 	function isMember (DaoAccount account, address allegedOwnerAddress) returns (bool) {
@@ -64,7 +64,7 @@ My use of `AbstractDaoChallenge` instead of `DaoChallenge` here is a [workaround
 		return true;
 	}
 	
-If all the above checks pass, the ether is moved from sender to recipient, and their tokens balances are adjusted. The recipient can now withdraw their ether or send the tokens onward to someone else.
+If all the above checks pass, the ether is moved from sender to recipient, and their token balances are adjusted. The recipient can now withdraw their ether or send the tokens onward to someone else.
 
 This transfer functionality turned out a lot more complicated than I would have liked. Any suggestions for simplifying it are much appreciated.
 
