@@ -1,5 +1,6 @@
 ---
 title: Recap Challenge 1 - 5
+date: 2016/8/5
 ---
 
 ## Challenge 1 - Basic Token Contract

@@ -1,5 +1,6 @@
 ---
 title: Challenge 6 - Transfers
+date: 2016/8/12
 ---
 
 In [challenges 4 and 5](https://dao-challenge.herokuapp.com/2016/08/08/recap-challenge-1-5/), I came up with an architecture where user funds are stored in segregated smart contracts. That way, if a hacker somehow completely drains their own contract, they can't also drain other people's funds.
@@ -24,7 +25,7 @@ To transfer tokens and their corresponding ether, the sender needs to call `tran
 		account.transfer(tokens, recipientAcc);
 		notifyTransfer(msg.sender, recipient, tokens);
 	}
-	
+
 The sender's `DaoAccount` checks that they have enough tokens and then calls `receiveTokens()` on the recipient's `DaoAccount`. It sends the correct amount of ether along with this function call:
 
 	function transfer(uint256 tokens, DaoAccount recipient) noEther onlyDaoChallenge {
@@ -51,7 +52,7 @@ To determine that the sender is legit, `receiveTokens()` ensures the sender is a
 
 		tokenBalance += tokens;
 	}
-	
+
 My use of `AbstractDaoChallenge` instead of `DaoChallenge` here is a [workaround for cyclic dependencies](https://github.com/ConsenSys/truffle/issues/135#issuecomment-223996851). What's important is that it calls `isMember()` on the parent `DaoChallenge`, which checks the sender against its `DaoAccount` list:
 
     // Check if a given account belongs to this DaoChallenge.
@@ -63,7 +64,7 @@ My use of `AbstractDaoChallenge` instead of `DaoChallenge` here is a [workaround
 		if (daoAccounts[allegedOwnerAddress] != account) return false;
 		return true;
 	}
-	
+
 If all the above checks pass, the ether is moved from sender to recipient, and their token balances are adjusted. The recipient can now withdraw their ether or send the tokens onward to someone else.
 
 This transfer functionality turned out a lot more complicated than I would have liked. Any suggestions for simplifying it are much appreciated.
@@ -75,5 +76,3 @@ The `DaoChallenge` contract published at [0x1616...d732](https://etherscan.io/ad
 This earlier post explains [how to use the contract](https://medium.com/@dao.challenge/challenge-5-segregated-funds-usability-6e749badb24d#.hy9rb52lu). You'll need to fill out 0x16163229926aad97318fac28c8d06101954ad732 as the address and copy-paste the latest JSON interface from [here](https://gist.githubusercontent.com/Sjors/7e82d476d347184904ac3640cb8ac00d/raw/77ef648e940081549f661e4ad01e8fe5d84ee38a/DaoChallenge.json).
 
 The [usual rules](https://medium.com/@dao.challenge/challenge-1-296cb5dab68f) apply. Most importantly: don’t go after me and my private keys. Even if you manage to rob only one of the two contracts, I’ll send you the rest. The full source is on [GitHub](https://github.com/Sjors/dao-challenge/tree/challenge-6).
-
-
