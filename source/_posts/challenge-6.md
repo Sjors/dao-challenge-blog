@@ -7,6 +7,8 @@ In [challenges 4 and 5](https://dao-challenge.herokuapp.com/2016/08/08/recap-cha
 
 Today I'm once again adding support for transferring tokens between users.
 
+<!-- more -->
+
 For this to work, the sender and recipient both need to have a `DaoAccount`. The sender account is automatically created when the sender buys tokens. Meanwhile, the recipient can call `createAccount()`, which creates a `DaoAccount` instance for the recipient without any tokens. We could create this account automatically upon receipt of the tokens, but then the sender might accidentally send tokens and ether into space. By creating a `DaoAccount` themselves, the recipient indicates they are in control of the account:
 
 	function createAccount () {
