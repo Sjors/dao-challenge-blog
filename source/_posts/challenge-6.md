@@ -3,7 +3,7 @@ title: Challenge 6 - Transfers
 date: 2016/8/12
 ---
 
-In [challenges 4 and 5](https://dao-challenge.herokuapp.com/2016/08/08/recap-challenge-1-5/), I came up with an architecture where user funds are stored in segregated smart contracts. That way, if a hacker somehow completely drains their own contract, they can't also drain other people's funds.
+In [challenges 4 and 5](https://dao-challenge.herokuapp.com/2016/08/05/recap-challenge-1-5/), I came up with an architecture where user funds are stored in segregated smart contracts. That way, if a hacker somehow completely drains their own contract, they can't also drain other people's funds.
 
 Today I'm once again adding support for transferring tokens between users.
 
