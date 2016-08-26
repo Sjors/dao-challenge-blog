@@ -3,10 +3,10 @@ title: Challenge 8 - Bug Fix & Tests
 date: 2016/8/26
 ---
 
-In [last week's smart contract](https://dao-challenge.herokuapp.com/2016/08/19/challenge-7/), I allowed the smart contract owner to issue a fixed number of tokens and determine the price and deadline. Unfortunately, I made a mistake in how `DaoAccount` enforces the token price.
+In [last week's smart contract](https://dao-challenge.herokuapp.com/2016/08/19/challenge-7/), I allowed the smart contract owner to issue a fixed number of tokens and determine the price and deadline. Unfortunately, I made several mistakes, including how `DaoAccount` enforces the token price.
 <!-- more -->
 
-I didn't take any ether from it, because I couldn't find a way to exploit these mistakes. If you see a way to rob it: have fun!
+Before I explain what went wrong, I should mention that I didn't take any ether from the contract, because I couldn't find a way to exploit these mistakes. If you see a way to rob it: have fun!
 
 The problem was that once a `DaoAccount` is created for a user, it freezes the token price forever, and it ignores subsequent changes in its parents' `DaoChallenge` token price:
 
@@ -74,7 +74,7 @@ Here's one test I wrote, which checks that when user A pays for a token, their t
        assertEq( acc.getTokenBalance(), 2 );
        assertEq( acc.balance, chal.tokenPrice() * 2 );
 
-Notice that I'm not directly calling `buyTokens()` on the `DaoAccount` of `userA`. This wouldn't work, because `buyTokens()` checks if it's called from `DaoChallenge`:
+Notice that I'm not directly calling `buyTokens()` on the `DaoAccount` of `userA`. This wouldn't work, because the `buyTokens()` function checks if it's called from `DaoChallenge`:
 
 		modifier onlyDaoChallenge() {if (daoChallenge != msg.sender) throw; _}
 
@@ -110,7 +110,7 @@ For instance, the original `buyTokens` checks the token issue deadline. The mock
 
 The mock contract also lets the test script set the token price to any value. Again, this occurs without any safety checks; in the real `DaoChallenge`, only the challenge owner can set the token price.
 
-In order to write test involving multiple users, I created a smart contract that simulates user actions:
+In order to write tests involving multiple users, I created a smart contract that simulates user actions:
 
 	contract User {
 	  DaoAccount public account;
