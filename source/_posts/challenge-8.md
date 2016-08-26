@@ -6,7 +6,7 @@ date: 2016/8/26
 In [last week's smart contract](https://dao-challenge.herokuapp.com/2016/08/19/challenge-7/), I allowed the smart contract owner to issue a fixed number of tokens and determine the price and deadline. Unfortunately, I made several mistakes, including how `DaoAccount` enforces the token price.
 <!-- more -->
 
-Before I explain what went wrong, I should mention that I didn't take any ether from the contract, because I couldn't find a way to exploit these mistakes. If you see a way to rob it: have fun!
+Before I explain what went wrong, I should mention that I didn't take any ether from the contract, because I couldn't find a way to exploit these mistakes. If you see a way to rob it, have fun!
 
 The problem was that once a `DaoAccount` is created for a user, it freezes the token price forever, and it ignores subsequent changes in its parents' `DaoChallenge` token price:
 
@@ -63,7 +63,7 @@ The [usual rules](https://medium.com/@dao.challenge/challenge-1-296cb5dab68f) ap
 
 ## Dapple and Tests
 
-Additionally, I added [Dapple](https://dapple.readthedocs.io/) to the project. Apparently it does many things, but for now, the only feature I'm using is [Tests](https://dapple.readthedocs.io/en/master/test/), and it's great.
+In addition to the above changes, I added [Dapple](https://dapple.readthedocs.io/) to the project. Apparently it does many things, but for now, the only feature I'm using is [Tests](https://dapple.readthedocs.io/en/master/test/), and it's great.
 
 Here's one test I wrote, which checks that when user A pays for a token, their token balance is increased:
 
