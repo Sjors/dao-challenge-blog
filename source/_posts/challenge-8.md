@@ -126,7 +126,7 @@ The test shown above starts out with `userA.buyTokens(chal, chal.tokenPrice() * 
 
 `userA` was given a budget of `10`. It sends `2` to the mock `DaoChallenge` by calling `chal.buyTokens.value(amount)(account)`.
 
-The real `DaoChallenge` is able to look up the `DaoAccount` corresponding to each user, but the mock is not so smart. This is why each `User` contract creates a `DaoAccount` by itself. It then passes that account along when calling `buyTokens()`.
+The real `DaoChallenge` is able to look up the `DaoAccount` corresponding to each user, but the mock is not so smart. This is why each `User` contract creates a `DaoAccount` by itself. `DaoChallenge` then passes that account along when calling `buyTokens()`.
 
 The `buyTokens` method on `DaoChallenge` is very simple (see above): it just sends the ether it receives onward to the `DaoAccount` instance. Now the sender is what `DaoAccount` expects and it sets its token balance to `2`. As a result, the test passes.
 
