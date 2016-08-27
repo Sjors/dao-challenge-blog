@@ -61,7 +61,7 @@ This earlier post explains [how to use the contract](https://medium.com/@dao.cha
 
 The [usual rules](https://medium.com/@dao.challenge/challenge-1-296cb5dab68f) apply. Most importantly: don’t go after me and my private keys. Even if you manage to rob only one of the two contracts, I’ll send you the rest. The full source is on [GitHub](https://github.com/Sjors/dao-challenge/tree/challenge-8).
 
-## Dapple and Tests
+## <a name="tests"></a> Dapple and Tests
 
 In addition to the above changes, I added [Dapple](https://dapple.readthedocs.io/) to the project. Apparently it does many things, but for now, the only feature I'm using is [Tests](https://dapple.readthedocs.io/en/master/test/), and it's great.
 
