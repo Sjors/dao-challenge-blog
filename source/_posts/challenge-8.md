@@ -67,12 +67,12 @@ In addition to the above changes, I added [Dapple](https://dapple.readthedocs.io
 
 Here's one test I wrote, which checks that when user A pays for a token, their token balance is increased:
 
-	contract DaoAccountBuyTokenTest is DaoAccountTest {
-   	  function testBuyTwoTokens() {
-       uint256 tokens = userA.buyTokens(chal, chal.tokenPrice() * 2);
-       assertEq( tokens, 2 );
-       assertEq( acc.getTokenBalance(), 2 );
-       assertEq( acc.balance, chal.tokenPrice() * 2 );
+    contract DaoAccountBuyTokenTest is DaoAccountTest {
+      function testBuyTwoTokens() {
+        uint256 tokens = userA.buyTokens(chal, chal.tokenPrice() * 2);
+        assertEq( tokens, 2 );
+        assertEq( acc.getTokenBalance(), 2 );
+        assertEq( acc.balance, chal.tokenPrice() * 2 );
 
 Notice that I'm not directly calling `buyTokens()` on the `DaoAccount` of `userA`. This wouldn't work, because the `buyTokens()` function checks if it's called from `DaoChallenge`:
 
@@ -87,22 +87,21 @@ To ensure `buyTokens()` on the `DaoAccount` of `userA` is called by a `DaoChalle
 
 In addition, I want to focus on `DaoAccount` and not worry about the specifics of its `DaoChallenge` parent. So I created a mock `DaoChallenge` smart contract: a contract much simpler than the real one, with fewer functions. It also comes with functions that make writing tests easier:
 
-	contract DaoChallenge {
-	  uint256 public tokenPrice = 1;
+	  contract DaoChallenge {
+	    uint256 public tokenPrice = 1;
 
+	    function createAccount () returns (DaoAccount) {
+	      return new DaoAccount(msg.sender);
+	    }
 
-	  function createAccount () returns (DaoAccount) {
-	    return new DaoAccount(msg.sender);
+	    function buyTokens (DaoAccount account) returns (uint256) {
+	      return account.buyTokens.value(msg.value)();
+	    }
+
+	    function setTokenPrice (uint256 price) {
+	      tokenPrice = price;
+	    }
 	  }
-
-	  function buyTokens (DaoAccount account) returns (uint256) {
-	    return account.buyTokens.value(msg.value)();
-	  }
-
-	  function setTokenPrice (uint256 price) {
-       tokenPrice = price;
-  	  }
-	}
 
 Note that in this mock `DaoChallenge`, all protection has been removed. This is OK, because `DaoChallenge` should have its own tests (which in turn would use a mock `DaoAccount`).
 
