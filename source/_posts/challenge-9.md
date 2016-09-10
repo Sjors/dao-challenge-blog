@@ -1,6 +1,6 @@
 ---
 title: Challenge 9 - Sell Order
-date: 2016/9/9
+date: 2016/9/10
 ---
 
 In this week's smart contract, I'm allowing the user to place a sell order for their tokens. They can specify how many tokens they wish to sell and at what price. They can also cancel the order. Other users won't be able to buy, so the sell orders aren't very useful yet. I'll add support for the buy-side later.
