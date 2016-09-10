@@ -3,7 +3,7 @@ title: Challenge 9 - Sell Order
 date: 2016/9/9
 ---
 
-In this week's smart contract, I'm allowing the user to place a sell order for their tokens. They can specify how many tokens they wish to sell and at what price. They can also cancel the order. Other users won't be able to take the sell order; I'll add support for that later. 
+In this week's smart contract, I'm allowing the user to place a sell order for their tokens. They can specify how many tokens they wish to sell and at what price. They can also cancel the order. Other users won't be able to buy, so the sell orders aren't very useful yet. I'll add support for the buy-side later.
 
 <!-- more -->
 
@@ -13,47 +13,47 @@ Sell orders have their own contract:
 	  address public owner; // DaoAccount that created the order
 	  uint256 public tokens;
 	  uint256 public price; // Wei per token
-		
+
 	  function SellOrder (uint256 _tokens, uint256 _price) noEther {
 	    owner = msg.sender;
 	    tokens = _tokens;
 	    price = _price;
 	  }
-	
+
 	  function cancel () noEther onlyOwner {
 	    suicide(owner);
 	  }
-	
+
 	  function execute () {
 	  	 // TODO: transfer tokens to buyer, send ether to seller
 	  }
 	}
 
-The user's DAO account is responsible for creating a sell order. Tokens are moved into the order, which prevents the user from selling more tokens than they own. It also means that once a voting feature is implemented, a user won't be able to vote using these tokens:
+The user's `DaoAccount` is responsible for creating a sell order. Tokens are moved into the order, which prevents the user from selling more tokens than they own. It also means that once a voting feature is implemented, a user won't be able to vote using these tokens:
 
 	contract DaoAccount {
 	  function placeSellOrder(uint256 tokens, uint256 price) noEther onlyDaoChallenge returns (SellOrder) {
 	    if (tokens == 0 || tokenBalance == 0 || tokenBalance < tokens) throw;
 	    if (tokenBalance - tokens > tokenBalance) throw; // Overflow
 	    tokenBalance -= tokens;
-	
+
 	    SellOrder order = new SellOrder(tokens, price, challengeOwner);
 	    return order;
-	  } 
+	  }
 
 The `DaoChallenge` contract is responsible for tracking all orders:
-	
+
 	contract DaoChallenge {
 	  mapping (address => SellOrder) public sellOrders;
 
 	  function placeSellOrder(uint256 tokens, uint256 price) noEther {
 		 DaoAccount account = accountFor(msg.sender, false);
 		 if (account == DaoAccount(0x00)) throw;
-			
+
 		 SellOrder order = account.placeSellOrder(tokens, price);
-			
+
 		 sellOrders[address(order)] = order;
-			
+
 		 notifyPlaceSellOrder(tokens, price);
 	  }
 
@@ -75,7 +75,7 @@ Canceling an order is a little cumbersome at the moment. The user needs to speci
 
        notifyCancelSellOrder();
      }
-   
+
 `DaoChallenge` looks up the order and makes sure that only the user who created the order can cancel it. It then instructs `DaoAccount` to cancel the order:
 
     contract DaoAccount {
@@ -84,7 +84,7 @@ Canceling an order is a little cumbersome at the moment. The user needs to speci
         tokenBalance += tokens;
         order.cancel();
       }
-      
+
 `DaoAccount` restores its token balance and then calls the `cancel()` method on the `SellOrder` contract. In turn, the `cancel()` function just deletes the sell order contract.
 
 I wrote a number of [tests](https://github.com/Sjors/dao-challenge/tree/challenge-9/contracts) for this behavior. One test, for example, makes sure a user can't cancel an order twice. However, these tests are far from complete.
