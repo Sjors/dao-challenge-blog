@@ -3,7 +3,7 @@ title: Challenge 9 - Sell Order
 date: 2016/9/10
 ---
 
-In this week's smart contract, I'm allowing the user to place a sell order for their tokens. They can specify how many tokens they wish to sell and at what price. They can also cancel the order. Other users won't be able to buy, so the sell orders aren't very useful yet. I'll add support for the buy-side later.
+In this week's smart contract, I'm allowing the user to place a sell order for their tokens. They can specify how many tokens they wish to sell and at what price. They can also cancel the order. Other users won't be able to buy, so the sell orders aren't very useful yet. I'll add support for the buy side later.
 
 <!-- more -->
 
@@ -57,7 +57,7 @@ The `DaoChallenge` contract is responsible for tracking all orders:
 		 notifyPlaceSellOrder(tokens, price);
 	  }
 
-Canceling an order is a little cumbersome at the moment. The user needs to specify the order smart contract address when calling `cancelSellOrder()` on `DaoChallenge`:
+Canceling an order is a little cumbersome at the moment. The user needs to specify the order's smart contract address when calling `cancelSellOrder()` on `DaoChallenge`:
 
 	contract DaoChallenge {
 	  function cancelSellOrder(address addr) noEther {
