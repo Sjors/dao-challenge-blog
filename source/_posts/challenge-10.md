@@ -31,14 +31,14 @@ The `suicide(owner)` line at the end moves ether to the seller's `DaoAccount` an
         tokenBalance += tokens;
         order.execute.value(msg.value)();
       }
-      
+
 Note that I didn't actively protect `executeSellOrder()` against [reentrancy](http://hackingdistributed.com/2016/07/13/reentrancy-woes/). The buyers token balance is increased before the order is executed. `SellOrder` is a trusted contract, since it was created by our own smart contract. It calls `suicide()` which sends the funds to `DaoAccount`, which is also a trusted contract. So I believe there is no need to prevent reentrance here. It's probably good practice to prevent reentrance by default, and only allow it if there is a good reason for that.
-	  
+
 ## Test Driven Development
 
-I wrote this code entirely through writing [tests](https://github.com/Sjors/dao-challenge/commit/131e7b84fd6e9e42d689800043937042f0eafce9#diff-08bfad511235c02b409ff759af38fea8). I used to test smart contracts in a web interface, see section IDE Woes in my post about [Challenge 5](https://medium.com/@dao.challenge/challenge-4-segregate-user-funds-986001587fae#.5hga47ua2). I find this much too tedious at the current level of multi-contract complexity. 
+I wrote this code entirely through writing [tests](https://github.com/Sjors/dao-challenge/commit/131e7b84fd6e9e42d689800043937042f0eafce9#diff-08bfad511235c02b409ff759af38fea8). I used to test smart contracts in a web interface, see section IDE Woes in my post about [Challenge 5](https://medium.com/@dao.challenge/challenge-4-segregate-user-funds-986001587fae#.5hga47ua2). I find this much too tedious at the current level of multi-contract complexity.
 
-It's much easier to just add a test, run `dapple test`, fix problems and run tests again until they pass. Every time I think of a way an attacker could compromise the contract, I add another test for that and improve the code until the test passes. 
+It's much easier to just add a test, run `dapple test`, fix problems and run tests again until they pass. Every time I think of a way an attacker could compromise the contract, I add another test for that and improve the code until the test passes.
 
 This is called [Test Driven Development](https://en.wikipedia.org/wiki/Test-driven_development) and it's good idea in general. I may however end up regretting the lack of manual testing. As always, this could be to your benefit, if my laziness makes it easier for you to rob my contract.
 
@@ -48,9 +48,14 @@ I need to do this the other way around as well: all tests for `DaoChallenge` sho
 
 ## Coming Soon - Buy Orders
 
-The current mechanism is not very user friendly. A potential buyer has to look up and study all SellOrder contracts, import the one they like into a wallet and then call `executeOrder()`. To make this easier, I'd like to add a BuyOrder. Initially this will be a very simple limit order, which either executes immediately or fails. This order would loop through all sell orders, and automatically execute is the price is below the limit.
+The current mechanism is not very user friendly. A potential buyer has to look up and study all SellOrder contracts, import the one they like into a wallet and then call `executeOrder()`. Here's a screenshot where I execute [this sell order](https://etherscan.io/address/0x44af2557e7578b00cf4254976b4c82ae0bc668e8#internaltx).
 
-Also not that the ether is deposited in the sellers `DaoAccount` afer an order is executed. There's still no way for a user to take ether out of their `DaoAccount`. 
+{% img /images/10-execute-sell-order.png 200 %}
+
+
+ To make this easier, I'd like to add a BuyOrder. Initially this will be a very simple limit order, which either executes immediately or fails. This order would loop through all sell orders, and automatically execute is the price is below the limit.
+
+Also not that the ether is deposited in the sellers `DaoAccount` afer an order is executed. There's still no way for a user to take ether out of their `DaoAccount`.
 
 ## Please Rob It!
 
