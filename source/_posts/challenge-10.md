@@ -32,11 +32,13 @@ The `suicide(owner)` line at the end moves ether to the seller's `DaoAccount` an
         order.execute.value(msg.value)();
       }
 
-Note that I didn't actively protect `executeSellOrder()` against [reentrancy](http://hackingdistributed.com/2016/07/13/reentrancy-woes/). The buyer's token balance is increased before the order is executed. `SellOrder` is a trusted contract, since it was created by our own smart contract. It calls `suicide()`, which sends the funds to `DaoAccount`, which is also a trusted contract. So I believe there's no need to prevent reentrance here. However, it's probably good practice to prevent reentrance by default, and only allow it if there's a good reason for that.
+Note that I didn't actively protect `executeSellOrder()` against [reentrancy](http://hackingdistributed.com/2016/07/13/reentrancy-woes/). The buyer's token balance is increased before the order is executed and ether is sent; could a reentrancy attack increase the balance more than once? 
+
+I don't believe so. `SellOrder` is a trusted contract, since it was created by our own smart contract. It calls `suicide()`, which sends the funds to `DaoAccount`, which is also a trusted contract. So I believe there's no need to prevent reentrance here. However, it's probably good practice to prevent reentrance by default, and only allow it if there's a good reason for that.
 
 ##Test-Driven Development
 
-I wrote this code entirely through writing [tests](https://github.com/Sjors/dao-challenge/commit/131e7b84fd6e9e42d689800043937042f0eafce9#diff-08bfad511235c02b409ff759af38fea8). I used to test smart contracts in a web interface, see section IDE Woes in my post about [Challenge 5](https://medium.com/@dao.challenge/challenge-4-segregate-user-funds-986001587fae#.5hga47ua2). I find this much too tedious at the current level of multi-contract complexity.
+I wrote this code entirely through writing [tests](https://github.com/Sjors/dao-challenge/commit/131e7b84fd6e9e42d689800043937042f0eafce9#diff-08bfad511235c02b409ff759af38fea8). In the past I tested my smart contracts in a web interface, as explained in section "IDE Woes" in my post about [Challenge 5](https://medium.com/@dao.challenge/challenge-4-segregate-user-funds-986001587fae#.5hga47ua2). However I find that approach much too tedious, now that I have to deal with multiple, fairly complex, smart contracts.
 
 It's much easier to just add a test, run `dapple test`, fix problems, and run tests again until they pass. Every time I think of a way an attacker could compromise the contract, I add another test for that and improve the code until the test passes.
 
@@ -51,7 +53,7 @@ The current mechanism is not very user friendly. A potential buyer has to look u
 
 {% img /images/10-execute-sell-order.png 200 %}
 
-To make this easier, I'd like to add a `BuyOrder`. Initially, this will be a very simple limit order, which either executes immediately or fails. This order would loop through all sell orders and automatically execute is the price is below the limit.
+To make this easier, I'd like to add a `BuyOrder`. Initially, this will be a very simple limit order, which either executes or fails,  immediately. This order would loop through all sell orders and automatically execute if the price is below the limit.
 
 Also note that the ether is deposited in the seller's `DaoAccount` after an order is executed. There's still no way for a user to take ether out of their `DaoAccount`.
 
